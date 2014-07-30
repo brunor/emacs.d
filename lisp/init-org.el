@@ -6,6 +6,8 @@
   (autoload 'org-mac-grab-link "org-mac-link" nil t)
   (require-package 'org-mac-iCal))
 
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
 
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c a") 'org-agenda)
