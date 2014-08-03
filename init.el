@@ -93,6 +93,7 @@
 (require 'init-ledger)
 ;; Extra packages which don't require any configuration
 
+(require-package 'flymake-cursor) ; displays error in minibuffer
 (require-package 'gnuplot)
 (require-package 'lua-mode)
 (require-package 'htmlize)
