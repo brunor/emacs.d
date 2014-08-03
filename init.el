@@ -94,6 +94,8 @@
 
 (require 'init-tabbar)
 (require 'init-sr-speedbar)
+(require 'init-ecb)
+
 ;; Extra packages which don't require any configuration
 
 (require-package 'flymake-cursor) ; displays error in minibuffer
