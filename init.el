@@ -93,6 +93,7 @@
 (require 'init-ledger)
 
 (require 'init-tabbar)
+(require 'init-sr-speedbar)
 ;; Extra packages which don't require any configuration
 
 (require-package 'flymake-cursor) ; displays error in minibuffer
@@ -101,7 +102,6 @@
 (require-package 'htmlize)
 (require-package 'dsvn)
 (require-package 'regex-tool)
-(require-package 'sr-speedbar) ;; in frame speedbar
 
 ;;----------------------------------------------------------------------------
 ;; Allow access from emacsclient
