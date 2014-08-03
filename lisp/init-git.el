@@ -35,9 +35,6 @@
   (diminish 'magit-auto-revert-mode))
 
 
-(when *is-a-mac*
-  (after-load 'magit
-    (add-hook 'magit-mode-hook (lambda () (local-unset-key [(meta h)])))))
 
 
 

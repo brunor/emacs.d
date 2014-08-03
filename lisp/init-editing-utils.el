@@ -1,8 +1,8 @@
 (require-package 'unfill)
 (require-package 'whole-line-or-region)
 
-(when (fboundp 'electric-pair-mode)
-  (electric-pair-mode))
+;; (when (fboundp 'electric-pair-mode)
+;;   (electric-pair-mode))
 
 ;;----------------------------------------------------------------------------
 ;; Some basic preferences
@@ -32,9 +32,6 @@
  truncate-lines nil
  truncate-partial-width-windows nil
  visible-bell t)
-
-(when *is-a-mac*
-  (setq-default locate-command "mdfind"))
 
 (global-auto-revert-mode)
 (setq global-auto-revert-non-file-buffers t
