@@ -27,11 +27,21 @@
 (add-hook 'haskell-mode-hook (lambda () (subword-mode +1)))
 (add-hook 'haskell-mode-hook 'haskell-auto-insert-module-template)
 
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+
+(add-hook 'haskell-mode-hook 
+	  (lambda () (add-to-list 'company-backends '(company-ghc :with company-dabbrev))))
+
 (setq-default haskell-stylish-on-save t)
 
 (after-load 'haskell-mode
   (define-key haskell-mode-map (kbd "C-c h") 'hoogle)
   (define-key haskell-mode-map (kbd "C-o") 'open-line))
+
+(custom-set-variables '(haskell-process-type 'cabal-repl))
 
 (when (eval-when-compile (>= emacs-major-version 24))
   (require-package 'ghci-completion)
