@@ -57,6 +57,7 @@
 (require 'init-darcs)
 (require 'init-git)
 
+(require 'init-gtags)
 (require 'init-crontab)
 (require 'init-textile)
 (require 'init-markdown)
@@ -92,6 +93,7 @@
 (require 'init-dash)
 (require 'init-ledger)
 
+(require 'init-cedet)
 (require 'init-tabbar)
 (require 'init-sr-speedbar)
 (require 'init-ecb)

@@ -7,8 +7,10 @@
 CVS
 .svn
 *~
+*.bak
 .cvsignore
 .*.lock
+/semanticdb
 /tramp
 /TODO
 /anything-c-adaptive-history
