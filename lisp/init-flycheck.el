@@ -22,10 +22,10 @@
 
 ;; (setq flycheck-display-errors-function 'sanityinc/flycheck-maybe-display-errors)
 
-(defun flycheck-display-error-messages-unless-error-buffer (errors)
-  (unless (get-buffer-window flycheck-error-list-buffer)
-    (flycheck-display-error-messages errors)))
+;; (defun flycheck-display-error-messages-unless-error-buffer (errors)
+;;   (unless (get-buffer-window flycheck-error-list-buffer)
+;;     (flycheck-display-error-messages errors)))
 
-(setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-buffer)
+;; (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-buffer)
 
 (provide 'init-flycheck)
