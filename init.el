@@ -70,18 +70,18 @@
 (require 'init-html)
 (require 'init-css)
 (require 'init-haml)
-(require 'init-python-mode)
+;;(require 'init-python-mode)
 (require 'init-haskell)
 (require 'init-ruby-mode)
-(require 'init-rails)
+;;(require 'init-rails)
 (require 'init-sql)
 
 (require 'init-paredit)
 (require 'init-lisp)
 (require 'init-slime)
-(require 'init-clojure)
-(when (>= emacs-major-version 24)
-  (require 'init-clojure-cider))
+;;(require 'init-clojure)
+;; (when (>= emacs-major-version 24)
+;;   (require 'init-clojure-cider))
 (require 'init-common-lisp)
 
 (when *spell-check-support-enabled*

@@ -10,6 +10,8 @@ CVS
 *.bak
 .cvsignore
 .*.lock
+recentf
+ido.last
 /semanticdb
 /tramp
 /TODO

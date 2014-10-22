@@ -121,6 +121,11 @@
 (require-package 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
+;; ---------------------------------------------------------------------------
+;; Color layered brackets, parens
+;;----------------------------------------------------------------------------
+;; (require-package 'rainbow-delimiters)
+;; (global-rainbow-delimiters-mode t)
 
 ;;----------------------------------------------------------------------------
 ;; Don't disable case-change functions
