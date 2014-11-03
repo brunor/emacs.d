@@ -1,6 +1,7 @@
 ;; in fram e speedbar
 (require-package 'sr-speedbar)
 (global-set-key (kbd "C-c b") 'sr-speedbar-toggle)
+;;(speedbar-add-supported-extension ".hs")
 ;;(speedbar-obj-do-check nil)
 ;;(speedbar-show-unknown-files t)
 ;;(speedbar-use-images nil)

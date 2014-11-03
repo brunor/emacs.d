@@ -100,6 +100,8 @@
 
 ;; Extra packages which don't require any configuration
 
+(require-package 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 (require-package 'flymake-cursor) ; displays error in minibuffer
 (require-package 'gnuplot)
 (require-package 'lua-mode)
