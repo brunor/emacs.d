@@ -8,15 +8,19 @@
 
 
 (defun gtags-root-dir ()
-    "Returns GTAGS root directory or nil if doesn't exist."
+  "Returns GTAGS root directory or nil if doesn't exist."
+  (condition-case nil
     (with-temp-buffer
       (if (zerop (call-process "global" nil t nil "-pr"))
           (buffer-substring (point-min) (1- (point-max)))
-        nil)))
+        nil))
+    ((debug error) nil)))
 
 (defun gtags-update ()
-    "Make GTAGS incremental update"
-    (call-process "global" nil nil nil "-u"))
+  "Make GTAGS incremental update"
+  (condition-case nil
+      (call-process "global" nil nil nil "-u")
+    ((debug error) nil)))
 
 (defun gtags-update-hook ()
   (when (gtags-root-dir)
