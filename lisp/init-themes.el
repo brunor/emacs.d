@@ -1,5 +1,5 @@
-;; (when (< emacs-major-version 24)
-;;   (require-package 'color-theme))
+
+(require-package 'color-theme)
 
 (require 'color-theme-solarized)
 
