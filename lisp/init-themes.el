@@ -5,7 +5,8 @@
 
 ;; If you don't customize it, this is the theme you get.
 ;;(setq-default custom-enabled-themes '(solarized-dark))
-(load-theme 'solarized-dark t)
+;;(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
+;;(load-theme 'solarized-dark t)
 
 
 (provide 'init-themes)
