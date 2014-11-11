@@ -24,6 +24,8 @@
 ;;----------------------------------------------------------------------------
 ;; Load configs for specific features and modes
 ;;----------------------------------------------------------------------------
+(setq linum-format "%2d\u2502 ")
+(global-linum-mode 1)
 
 (require-package 'wgrep)
 (require-package 'project-local-variables)
@@ -75,7 +77,7 @@
 ;;(require 'init-ruby-mode)
 ;;(require 'init-rails)
 (require 'init-sql)
-
+(require 'init-yaml)
 (require 'init-paredit)
 (require 'init-lisp)
 (require 'init-slime)
