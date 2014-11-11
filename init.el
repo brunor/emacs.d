@@ -26,6 +26,8 @@
 ;;----------------------------------------------------------------------------
 (setq linum-format "%2d\u2502 ")
 (global-linum-mode 1)
+(require-package 'hlinum)
+(hlinum-activate)
 
 (require-package 'wgrep)
 (require-package 'project-local-variables)
