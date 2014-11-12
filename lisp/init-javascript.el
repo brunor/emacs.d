@@ -1,9 +1,14 @@
+;;; settings for javascript develpment
+
 (require-package 'json-mode)
-(when (>= emacs-major-version 24)
-  (require-package 'js2-mode)
-  (require-package 'ac-js2)
-  (require-package 'coffee-mode))
+(require-package 'js2-mode)
+(require-package 'ac-js2)
+(require-package 'coffee-mode)
 (require-package 'js-comint)
+(require-package 'tern)
+(require-package 'tern-auto-complete)
+(require-package 'jsx-mode)
+(require-package 'web-beautify)
 
 (defcustom preferred-javascript-mode
   (first (remove-if-not #'fboundp '(js2-mode js-mode)))
@@ -21,10 +26,34 @@
                                   unless (eq preferred-javascript-mode (cdr entry))
                                   collect entry)))
 
-(require-package 'jsx-mode)
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . jsx-mode))
-(setq jsx-indent-level 2)
 
+(define-derived-mode jsx2-mode js2-mode "jsx2" "JSX mode based on js2")
+
+(add-to-list 'auto-mode-alist '("\\.jsx$" . jsx2-mode))
+
+(require 'flycheck)
+
+(flycheck-define-checker jsxhint-checker
+  "A JSX syntax and style checker based on JSXHint."
+
+  :command ("jsxhint" (config-file "--config=" jshint-configuration-path) source)
+  :error-patterns ((error line-start (1+ nonl) ": line " line ", col " column ", " (message) line-end))
+  :modes (jsx-mode jsx2-mode))
+
+(defun find-jshintrc ()
+  (expand-file-name ".jshintrc"
+                    (locate-dominating-file
+                     (or (buffer-file-name) default-directory) ".jshintrc")))
+
+
+(defun setup-jsxhint ()
+  (setq-local jshint-configuration-path (find-jshintrc))
+  (flycheck-select-checker 'jsxhint-checker)
+  (flycheck-mode))
+
+(add-hook 'jsx2-mode-hook 'setup-jsxhint)
+(add-hook 'jsx-mode-hook 'setup-jsxhint)
+;; (require-package 'flycheck)
 ;; (flycheck-define-checker jsxhint-checker
 ;;   "A JSX syntax and style checker based on JSXHint."
 
@@ -32,13 +61,22 @@
 ;;   :error-patterns
 ;;   ((error line-start (1+ nonl) ": line " line ", col " column ", " (message) line-end))
 ;;   :modes (jsx-mode))
+
 ;; (add-hook 'jsx-mode-hook (lambda ()
-;;                           (flycheck-select-checker 'jsxhint-checker)
-;;                           (flycheck-mode)))
+;;                            (flycheck-select-checker 'jsxhint-checker)
+;;                            (flycheck-mode)))
+
+;; (add-hook 'jsx-mode-hook
+;;           (lambda () (auto-complete-mode 1)))
+
+(setq jsx-indent-level 2)
 
 ;; js2-mode
 (after-load 'js2-mode
   (add-hook 'js2-mode-hook '(lambda () (setq mode-name "JS2"))))
+
+(add-hook 'js-mode-hook
+          (lambda () (flycheck-mode t)))
 
 (setq-default
  js2-basic-offset preferred-javascript-indent-level
@@ -47,11 +85,28 @@
 (after-load 'js2-mode
   (js2-imenu-extras-setup))
 
+(setq js2-highlight-level 3)
+
 ;; js-mode
 (setq-default js-indent-level preferred-javascript-indent-level)
 
 
 (add-to-list 'interpreter-mode-alist (cons "node" preferred-javascript-mode))
+
+;; set up tern
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(eval-after-load 'tern
+  '(progn
+     (require 'tern-auto-complete)
+     (tern-ac-setup)))
+
+(add-hook 'jsx-mode-hook (lambda () (tern-mode t)))
+
+;; Sometimes when you have just added .tern-project file or edit the file but Tern does not auto reload,
+;; you need to manually kill Tern server. This little piece of code does the trick
+(defun delete-tern-process ()
+  (interactive)
+  (delete-process "Tern"))
 
 
 ;; Javascript nests {} and () a lot, so I find this helpful
