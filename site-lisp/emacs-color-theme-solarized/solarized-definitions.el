@@ -519,6 +519,10 @@ the \"Gen RGB\" column in solarized-definitions.el to improve them further."
         (slime-repl-output-mouseover-face (:box (:color base3)))
         (slime-style-warning-face (,@fmt-bold ,@fg-orange))
         (slime-warning-face (,@fmt-bold ,@fg-red)) ; WarningMsg
+        ;; web-mode
+        (web-mode-html-attr-name-face ((t ( ,@fg-base0))))
+        (web-mode-html-tag-bracket-face ((t ( ,@fg-base01))))
+        (web-mode-html-tag-face ((t ( ,@fg-blue ,@fmt-bold))))
         ;; whitespace
         (whitespace-empty (,@fg-red))
         (whitespace-hspace (,@fg-orange))

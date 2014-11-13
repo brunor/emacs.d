@@ -19,8 +19,8 @@
                (if (file-exists-p compreqname) compreqname reqname)))
     (require 'solarized-definitions)))
 
-(eval-when-compile
-  (require 'color-theme))
+;; (eval-when-compile
+;;   (require 'color-theme))
 
 ;;;###autoload
 (defun color-theme-solarized (mode)
@@ -46,13 +46,13 @@ Ported to Emacs by Greg Pfeil, http://ethanschoonover.com/solarized."
   (interactive)
   (color-theme-solarized 'light))
 
-(add-to-list 'color-themes
-             `(color-theme-solarized-light
-               "Solarized Light"
-               ,solarized-description))
-(add-to-list 'color-themes
-             `(color-theme-solarized-dark
-               "Solarized Dark"
-               ,solarized-description))
+;; (add-to-list 'color-themes
+;;              `(color-theme-solarized-light
+;;                "Solarized Light"
+;;                ,solarized-description))
+;; (add-to-list 'color-themes
+;;              `(color-theme-solarized-dark
+;;                "Solarized Dark"
+;;                ,solarized-description))
 
 (provide 'color-theme-solarized)
