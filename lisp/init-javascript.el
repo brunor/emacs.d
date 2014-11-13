@@ -4,97 +4,33 @@
 (require-package 'js2-mode)
 (require-package 'ac-js2)
 (require-package 'coffee-mode)
-(require-package 'js-comint)
+;;(require-package 'js-comint)
 (require-package 'tern)
 (require-package 'tern-auto-complete)
 (require-package 'jsx-mode)
 (require-package 'web-beautify)
 
-(defcustom preferred-javascript-mode
-  (first (remove-if-not #'fboundp '(js2-mode js-mode)))
-  "Javascript mode to use for .js files."
-  :type 'symbol
-  :group 'programming
-  :options '(js2-mode js-mode))
-(defvar preferred-javascript-indent-level 2)
 
-;; Need to first remove from list if present, since elpa adds entries too, which
-;; may be in an arbitrary order
-(eval-when-compile (require 'cl))
-(setq auto-mode-alist (cons `("\\.js\\(\\.erb\\)?\\'" . ,preferred-javascript-mode)
-                            (loop for entry in auto-mode-alist
-                                  unless (eq preferred-javascript-mode (cdr entry))
-                                  collect entry)))
+;;; include js2-mode
+(add-hook 'js-mode-hook 'js2-minor-mode)
+;;(add-hook 'js2-mode-hook 'ac-js2-mode)
 
+;;; use json-mode instead of js2 for .json file
+(br/set-up 'json-mode
+              (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
+              (add-hook 'json-mode-hook (lambda () (js2-minor-mode-exit)
+                                          (js2-mode-exit))))
 
-(define-derived-mode jsx2-mode js2-mode "jsx2" "JSX mode based on js2")
+;;; jshint
+;;; requirements: nodejs, npm,
+;;; install jshint via npm: npm install -g jshint
+(br/set-up 'flycheck
+           (add-hook 'js-mode-hook
+                     (lambda () (flycheck-mode t))))
 
-(add-to-list 'auto-mode-alist '("\\.jsx$" . jsx2-mode))
-
-(require 'flycheck)
-
-(flycheck-define-checker jsxhint-checker
-  "A JSX syntax and style checker based on JSXHint."
-
-  :command ("jsxhint" (config-file "--config=" jshint-configuration-path) source)
-  :error-patterns ((error line-start (1+ nonl) ": line " line ", col " column ", " (message) line-end))
-  :modes (jsx-mode jsx2-mode))
-
-(defun find-jshintrc ()
-  (expand-file-name ".jshintrc"
-                    (locate-dominating-file
-                     (or (buffer-file-name) default-directory) ".jshintrc")))
-
-
-(defun setup-jsxhint ()
-  (setq-local jshint-configuration-path (find-jshintrc))
-  (flycheck-select-checker 'jsxhint-checker)
-  (flycheck-mode))
-
-(add-hook 'jsx2-mode-hook 'setup-jsxhint)
-(add-hook 'jsx-mode-hook 'setup-jsxhint)
-;; (require-package 'flycheck)
-;; (flycheck-define-checker jsxhint-checker
-;;   "A JSX syntax and style checker based on JSXHint."
-
-;;   :command ("jsxhint" source)
-;;   :error-patterns
-;;   ((error line-start (1+ nonl) ": line " line ", col " column ", " (message) line-end))
-;;   :modes (jsx-mode))
-
-;; (add-hook 'jsx-mode-hook (lambda ()
-;;                            (flycheck-select-checker 'jsxhint-checker)
-;;                            (flycheck-mode)))
-
-;; (add-hook 'jsx-mode-hook
-;;           (lambda () (auto-complete-mode 1)))
-
-(setq jsx-indent-level 2)
-
-;; js2-mode
-(after-load 'js2-mode
-  (add-hook 'js2-mode-hook '(lambda () (setq mode-name "JS2"))))
-
-(add-hook 'js-mode-hook
-          (lambda () (flycheck-mode t)))
-
-(setq-default
- js2-basic-offset preferred-javascript-indent-level
- js2-bounce-indent-p nil)
-
-(after-load 'js2-mode
-  (js2-imenu-extras-setup))
-
-(setq js2-highlight-level 3)
-
-;; js-mode
-(setq-default js-indent-level preferred-javascript-indent-level)
-
-
-(add-to-list 'interpreter-mode-alist (cons "node" preferred-javascript-mode))
 
 ;; set up tern
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+;;(add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (eval-after-load 'tern
   '(progn
      (require 'tern-auto-complete)
@@ -107,6 +43,111 @@
 (defun delete-tern-process ()
   (interactive)
   (delete-process "Tern"))
+
+
+
+
+;;; enable web mode and highlighting
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+(defadvice web-mode-highlight-part (around tweak-jsx activate)
+  (if (equal web-mode-content-type "jsx")
+      (let ((web-mode-enable-part-face nil))
+        ad-do-it)
+    ad-do-it))
+
+;;;
+(flycheck-define-checker jsxhint-checker
+  "A JSX syntax and style checker based on JSXHint."
+
+  :command ("jsxhint" source)
+  :error-patterns
+  ((error line-start (1+ nonl) ": line " line ", col " column ", " (message) line-end))
+  :modes (web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (equal web-mode-content-type "jsx")
+              ;; enable flycheck
+              (flycheck-select-checker 'jsxhint-checker)
+              (flycheck-mode)
+              ;; auto complete
+              (auto-complete-mode 1)
+              ;; (tern-mode t)
+              )))
+
+
+;;; enable hide/show
+(add-hook 'js-mode-hook (lambda () (hs-minor-mode 1)))
+
+
+;; (defcustom preferred-javascript-mode
+;;   (first (remove-if-not #'fboundp '(js2-mode js-mode)))
+;;   "Javascript mode to use for .js files."
+;;   :type 'symbol
+;;   :group 'programming
+;;   :options '(js2-mode js-mode))
+;; (defvar preferred-javascript-indent-level 2)
+
+;; ;; Need to first remove from list if present, since elpa adds entries too, which
+;; ;; may be in an arbitrary order
+;; (eval-when-compile (require 'cl))
+;; (setq auto-mode-alist (cons `("\\.js\\(\\.erb\\)?\\'" . ,preferred-javascript-mode)
+;;                             (loop for entry in auto-mode-alist
+;;                                   unless (eq preferred-javascript-mode (cdr entry))
+;;                                   collect entry)))
+
+
+;; (define-derived-mode jsx2-mode js2-mode "jsx2" "JSX mode based on js2")
+
+;; (add-to-list 'auto-mode-alist '("\\.jsx$" . jsx2-mode))
+
+;; (require 'flycheck)
+
+;; (flycheck-define-checker jsxhint-checker
+;;   "A JSX syntax and style checker based on JSXHint."
+
+;;   :command ("jsxhint" (config-file "--config=" jshint-configuration-path) source)
+;;   :error-patterns ((error line-start (1+ nonl) ": line " line ", col " column ", " (message) line-end))
+;;   :modes (jsx-mode jsx2-mode))
+
+;; (defun find-jshintrc ()
+;;   (expand-file-name ".jshintrc"
+;;                     (locate-dominating-file
+;;                      (or (buffer-file-name) default-directory) ".jshintrc")))
+
+
+;; (defun setup-jsxhint ()
+;;   (setq-local jshint-configuration-path (find-jshintrc))
+;;   (flycheck-select-checker 'jsxhint-checker)
+;;   (flycheck-mode))
+
+;; (add-hook 'jsx2-mode-hook 'setup-jsxhint)
+;; (add-hook 'jsx-mode-hook 'setup-jsxhint)
+
+
+;; (setq jsx-indent-level 2)
+
+;; ;; js2-mode
+;; (after-load 'js2-mode
+;;   (add-hook 'js2-mode-hook '(lambda () (setq mode-name "JS2"))))
+
+;; (add-hook 'js-mode-hook
+;;           (lambda () (flycheck-mode t)))
+
+;; (setq-default
+;;  js2-basic-offset preferred-javascript-indent-level
+;;  js2-bounce-indent-p nil)
+
+;; (after-load 'js2-mode
+;;   (js2-imenu-extras-setup))
+
+;; (setq js2-highlight-level 3)
+
+;; ;; js-mode
+;; (setq-default js-indent-level preferred-javascript-indent-level)
+
+
+;; (add-to-list 'interpreter-mode-alist (cons "node" preferred-javascript-mode))
+
 
 
 ;; Javascript nests {} and () a lot, so I find this helpful
@@ -130,31 +171,22 @@
 ;; Run and interact with an inferior JS via js-comint.el
 ;; ---------------------------------------------------------------------------
 
-(setq inferior-js-program-command "js")
+;; (setq inferior-js-program-command "js")
 
-(defvar inferior-js-minor-mode-map (make-sparse-keymap))
-(define-key inferior-js-minor-mode-map "\C-x\C-e" 'js-send-last-sexp)
-(define-key inferior-js-minor-mode-map "\C-\M-x" 'js-send-last-sexp-and-go)
-(define-key inferior-js-minor-mode-map "\C-cb" 'js-send-buffer)
-(define-key inferior-js-minor-mode-map "\C-c\C-b" 'js-send-buffer-and-go)
-(define-key inferior-js-minor-mode-map "\C-cl" 'js-load-file-and-go)
+;; (defvar inferior-js-minor-mode-map (make-sparse-keymap))
+;; (define-key inferior-js-minor-mode-map "\C-x\C-e" 'js-send-last-sexp)
+;; (define-key inferior-js-minor-mode-map "\C-\M-x" 'js-send-last-sexp-and-go)
+;; (define-key inferior-js-minor-mode-map "\C-cb" 'js-send-buffer)
+;; (define-key inferior-js-minor-mode-map "\C-c\C-b" 'js-send-buffer-and-go)
+;; (define-key inferior-js-minor-mode-map "\C-cl" 'js-load-file-and-go)
 
-(define-minor-mode inferior-js-keys-mode
-  "Bindings for communicating with an inferior js interpreter."
-  nil " InfJS" inferior-js-minor-mode-map)
+;; (define-minor-mode inferior-js-keys-mode
+;;   "Bindings for communicating with an inferior js interpreter."
+;;   nil " InfJS" inferior-js-minor-mode-map)
 
-(dolist (hook '(js2-mode-hook js-mode-hook))
-  (add-hook hook 'inferior-js-keys-mode))
+;; (dolist (hook '(js2-mode-hook js-mode-hook))
+;;   (add-hook hook 'inferior-js-keys-mode))
 
-;; ---------------------------------------------------------------------------
-;; Alternatively, use skewer-mode
-;; ---------------------------------------------------------------------------
-
-(when (and (>= emacs-major-version 24) (featurep 'js2-mode))
-  (require-package 'skewer-mode)
-  (after-load 'skewer-mode
-    (add-hook 'skewer-mode-hook
-              (lambda () (inferior-js-keys-mode -1)))))
 
 
 (provide 'init-javascript)

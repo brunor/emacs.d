@@ -5,6 +5,44 @@
      '(progn ,@body)))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; a replacement for (require 'xxx)
+;;; https://github.com/ubolonton/.emacs.d/blob/master/config/ublt-editing.el
+;;; usage:
+;; (tmtxt/set-up 'xxx
+;;   body)
+;;; try to load (require the feature xxx) and then run the body (those commands
+;;; that go with xxx feature)
+;;; if can not load xxx feature, ignore it and continue running the rest of the
+;;; current file
+(defvar br/ok-features ())
+(defvar br/error-features ())
+
+(defun br/require (feature &optional filename noerror)
+  (if noerror
+      (condition-case err
+          (progn
+            (let ((name (require feature filename)))
+              (add-to-list 'br/ok-features feature t)
+              (message "Feature `%s' ok" feature)
+              name))
+        (error
+         (setq br/error-features (plist-put br/error-features feature err))
+         (message "Feature `%s' failed" feature)
+         nil))
+    (require feature filename)))
+
+(defmacro br/set-up (feature &rest body)
+    "Try loading the feature, running BODY afterward, notifying
+user if not found. This is mostly for my customizations, since I
+don't want a feature failing to load to affect other features in
+the same file. Splitting everything out would result in too many
+files."
+    (declare (indent 1))
+    `(let ((f (if (stringp ,feature) (intern ,feature) ,feature)))
+       (when (br/require f nil t)
+         ,@body)))
+
 ;;----------------------------------------------------------------------------
 ;; Handier way to add modes to auto-mode-alist
 ;;----------------------------------------------------------------------------
