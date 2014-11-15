@@ -1,3 +1,26 @@
+;;; dired+, isearch, ido
+
+
+;;------------------------------------------------------------------
+;; init dired+
+;;------------------------------------------------------------------
+(require-package 'dired+)
+
+(setq diredp-hide-details-initially-flag nil)
+
+(after-load 'dired
+  (require 'dired+)
+  (when (fboundp 'global-dired-hide-details-mode)
+    (global-dired-hide-details-mode -1))
+  (setq dired-recursive-deletes 'top)
+  (define-key dired-mode-map [mouse-2] 'dired-find-file)
+  (add-hook 'dired-mode-hook
+            (lambda () (guide-key/add-local-guide-key-sequence "%"))))
+
+
+;;------------------------------------------------------------------
+;; init isearch
+;;------------------------------------------------------------------
 ;; Show number of matches while searching
 (when (>= emacs-major-version 24)
   (require-package 'anzu)
@@ -72,4 +95,51 @@ This is useful when followed by an immediate kill."
 (define-key isearch-mode-map [(control return)] 'isearch-exit-other-end)
 
 
-(provide 'init-isearch)
+
+;;------------------------------------------------------------------
+;; init ido
+;;------------------------------------------------------------------
+;; Use C-f during file selection to switch to regular find-file
+(require 'ido)
+(ido-mode t)
+(ido-everywhere t)
+(setq ido-enable-flex-matching t)
+(setq ido-use-filename-at-point nil)
+(setq ido-auto-merge-work-directories-length 0)
+(setq ido-use-virtual-buffers t)
+
+(when (eval-when-compile (>= emacs-major-version 24))
+ (require-package 'ido-ubiquitous)
+ (ido-ubiquitous-mode t))
+
+;; Use smex to handle M-x
+(when (eval-when-compile (>= emacs-major-version 24))
+  (require-package 'smex)
+  ;; Change path for ~/.smex-items
+  (setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
+  (global-set-key [remap execute-extended-command] 'smex))
+
+(require-package 'idomenu)
+
+;; Allow the same buffer to be open in different frames
+(setq ido-default-buffer-method 'selected-window)
+
+;; http://www.reddit.com/r/emacs/comments/21a4p9/use_recentf_and_ido_together/cgbprem
+(add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up] 'previous-history-element)))
+
+
+;;------------------------------------------------------------------
+;; init hippie-expand
+;;------------------------------------------------------------------
+(global-set-key (kbd "M-/") 'hippie-expand)
+
+(setq hippie-expand-try-functions-list
+      '(try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill))
+
+
+
+(provide 'init-search)

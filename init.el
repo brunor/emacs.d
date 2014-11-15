@@ -2,9 +2,9 @@
 ;;; This file bootstraps the configuration, which is divided into
 ;;; a number of other files.
 
-(let ((minver 23))
+(let ((minver 24))
   (unless (>= emacs-major-version minver)
-    (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
+    (error "Emacs version is too old -- this config requires v%s or higher" minver)))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-benchmarking) ;; Measure startup time
@@ -15,7 +15,6 @@
 ;;----------------------------------------------------------------------------
 ;; Bootstrap config
 ;;----------------------------------------------------------------------------
-(require 'init-compat)
 (require 'init-utils)
 (require 'init-site-lisp) ;; Must come before elpa, as it may provide package.el
 (require 'init-elpa)      ;; Machinery for installing required packages
@@ -24,52 +23,29 @@
 ;;----------------------------------------------------------------------------
 ;; Load configs for specific features and modes
 ;;----------------------------------------------------------------------------
-(setq linum-format "%2d\u2502 ")
-(global-linum-mode 1)
-(require-package 'hlinum)
-(hlinum-activate)
-
 (require-package 'wgrep)
 (require-package 'project-local-variables)
 (require-package 'diminish)
 (require-package 'scratch)
 (require-package 'mwe-log-commands)
 
-(require 'init-frame-hooks)
-(require 'init-xterm)
-(require 'init-themes)
-(require 'init-gui-frames)
-(require 'init-dired)
-(require 'init-isearch)
-(require 'init-uniquify)
-(require 'init-ibuffer)
-(require 'init-flycheck)
+(require 'init-windows)
+(require 'init-search)
 
-(require 'init-recentf)
-(require 'init-ido)
-(require 'init-hippie-expand)
+(require 'init-flycheck)
 (require 'init-company)
 ;;(require 'init-auto-complete)
-(require 'init-windows)
 (require 'init-sessions)
-(require 'init-fonts)
 ;;(require 'init-mmm)
-
 (require 'init-editing-utils)
-
 (require 'init-vc)
-(require 'init-darcs)
-(require 'init-git)
 
 (require 'init-gtags)
-(require 'init-crontab)
-(require 'init-textile)
 (require 'init-markdown)
 (require 'init-csv)
-;;(require 'init-erlang)
+
 (require 'init-web)
 (require 'init-javascript)
-;;(require 'init-php)
 (require 'init-org)
 (require 'init-nxml)
 ;;(require 'init-html)
@@ -77,42 +53,34 @@
 (require 'init-haml)
 ;;(require 'init-python-mode)
 (require 'init-haskell)
-;;(require 'init-ruby-mode)
-;;(require 'init-rails)
 (require 'init-sql)
 (require 'init-yaml)
 (require 'init-paredit)
 (require 'init-lisp)
 (require 'init-slime)
-;;(require 'init-clojure)
-;; (when (>= emacs-major-version 24)
-;;   (require 'init-clojure-cider))
 (require 'init-common-lisp)
 
-(when *spell-check-support-enabled*
-  (require 'init-spelling))
-
-(require 'init-marmalade)
-(require 'init-misc)
-
-(require 'init-dash)
-(require 'init-ledger)
-
 (require 'init-cedet)
-(require 'init-tabbar)
-(require 'init-sr-speedbar)
 (require 'init-ecb)
 
-;; Extra packages which don't require any configuration
+;; misc stuff prob too long to fit in this file
+;; but doesnt currently have its own file
+(require 'init-misc)
 
+;;---------------------------------------------------------------------------
+;; Extra packages which don't require any configuration
+;;---------------------------------------------------------------------------
 (require-package 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(require-package 'crontab-mode)
+(add-auto-mode 'crontab-mode "\\.?cron\\(tab\\)?\\'")
 (require-package 'flymake-cursor) ; displays error in minibuffer
 (require-package 'gnuplot)
 (require-package 'lua-mode)
 (require-package 'htmlize)
 (require-package 'dsvn)
 (require-package 'regex-tool)
+(require-package 'goto-last-change)
 
 ;;----------------------------------------------------------------------------
 ;; Allow access from emacsclient

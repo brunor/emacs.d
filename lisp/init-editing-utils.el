@@ -157,7 +157,7 @@
 ;; Color layered brackets, parens
 ;;----------------------------------------------------------------------------
 ;; (require-package 'rainbow-delimiters)
-;; (global-rainbow-delimiters-mode t)
+;; (global-rainbow-delimiters-mode)
 
 ;;----------------------------------------------------------------------------
 ;; Don't disable case-change functions
@@ -175,6 +175,19 @@
 ;;----------------------------------------------------------------------------
 ;; Handy key bindings
 ;;----------------------------------------------------------------------------
+
+;; other-window alternative, C-x o is a bit cumbersome
+(global-set-key (kbd "M-o") 'other-window)
+
+;; kill current buffer
+(global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+;; (global-set-key (kbd "C-x C-k") (lambda ()
+;;                                   (interactive)
+;;                                   (kill-buffer (buffer-name))))
+
+;; open eshell
+(global-set-key (kbd "<f1>") 'eshell)
+
 ;; To be able to M-x without meta
 (global-set-key (kbd "C-x C-m") 'execute-extended-command)
 
@@ -188,7 +201,8 @@
 (require-package 'ace-jump-mode)
 (global-set-key (kbd "C-;") 'ace-jump-mode)
 (global-set-key (kbd "C-:") 'ace-jump-word-mode)
-
+(global-set-key (kbd "C-c SPC") 'ace-jump-line-mode)
+(global-set-key (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
 (require-package 'multiple-cursors)
 ;; multiple-cursors
@@ -387,3 +401,4 @@ With arg N, insert N newlines."
 
 
 (provide 'init-editing-utils)
+ 

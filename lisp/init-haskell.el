@@ -1,16 +1,18 @@
+;;; haskell settings
+
 (require-package 'haskell-mode)
 (require-package 'company-ghc)
+(require-package 'hi2)
+(require-package 'flycheck-hdevtools)
+(require-package 'flycheck-haskell)
 
-(when (> emacs-major-version 23)
-  (require-package 'flycheck-hdevtools)
-  (require-package 'flycheck-haskell)
-  (after-load 'flycheck
-    (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
+(after-load 'flycheck
+  (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
 
-    (defadvice haskell-mode-stylish-buffer (around skip-if-flycheck-errors activate)
-      "Don't run stylish-buffer if the buffer appears to have a syntax error."
-      (unless (flycheck-has-current-errors-p 'error)
-        ad-do-it))))
+  (defadvice haskell-mode-stylish-buffer (around skip-if-flycheck-errors activate)
+    "Don't run stylish-buffer if the buffer appears to have a syntax error."
+    (unless (flycheck-has-current-errors-p 'error)
+      ad-do-it)))
 
 
 (dolist (hook '(haskell-mode-hook inferior-haskell-mode-hook haskell-interactive-mode-hook))
@@ -22,7 +24,7 @@
 
 (add-auto-mode 'haskell-mode "\\.ghci\\'")
 
-(require-package 'hi2)
+
 
 (autoload 'ghc-init "ghc" nil t)
 (autoload 'ghc-debug "ghc" nil t)
@@ -49,8 +51,8 @@
   (define-key haskell-mode-map (kbd "C-o") 'open-line)
   (define-key haskell-mode-map [f8] 'haskell-navigate-imports))
 
-(custom-set-variables '(haskell-process-type 'cabal-repl))
-(custom-set-variables '(haskell-tags-on-save t))
+(setq haskell-process-type 'cabal-repl)
+(setq haskell-tags-on-save t)
 
 (when (eval-when-compile (>= emacs-major-version 24))
   (require-package 'ghci-completion)
@@ -70,29 +72,29 @@
 
 
 ;; interactive commands
-(custom-set-variables
-  '(haskell-process-suggest-remove-import-lines t)
-  '(haskell-process-auto-import-loaded-modules t)
-  '(haskell-process-log t))
+(setq haskell-process-suggest-remove-import-lines t)
+(setq haskell-process-auto-import-loaded-modules t)
+(setq haskell-process-log t)
+
+
 
 (eval-after-load 'haskell-mode '(progn
-  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
-  (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
-  (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
-  (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
-  (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
-  (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)
-  (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)))
-(eval-after-load 'haskell-cabal '(progn
-  (define-key haskell-cabal-mode-map (kbd "C-`") 'haskell-interactive-bring)
-  (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-ode-clear)
-  (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
+                                  (define-key haskell-mode-map (kbd "C-c C-o") 'haskell-compile)
+                                  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+                                  (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+                                  (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
+                                  (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
+                                  (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
+                                  (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)
+                                  (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)))
 
-(eval-after-load 'haskell-mode
-  '(define-key haskell-mode-map (kbd "C-c C-o") 'haskell-compile))
-(eval-after-load 'haskell-cabal
-  '(define-key haskell-cabal-mode-map (kbd "C-c C-o") 'haskell-compile))
+(eval-after-load 'haskell-cabal '(progn
+                                   (define-key haskell-cabal-mode-map (kbd "C-c C-o") 'haskell-compile)
+                                   (define-key haskell-cabal-mode-map (kbd "C-`") 'haskell-interactive-bring)
+                                   (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-ode-clear)
+                                   (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+                                   (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
+
 
 
 (provide 'init-haskell)
