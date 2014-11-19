@@ -82,10 +82,10 @@
   (define-key web-mode-map (kbd "C-s-h") 'web-mode-element-rename)
 
   ;; set faces
-  (set-face-attribute 'web-mode-doctype-face nil :foreground "yellow" :bold t)
-  (set-face-attribute 'web-mode-html-tag-face nil :foreground "green" :bold t)
-  (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "blue")
-  (set-face-attribute 'web-mode-html-tag-bracket-face nil :foreground "blue")
+  ;; (set-face-attribute 'web-mode-doctype-face nil :foreground "yellow" :bold t)
+  ;; (set-face-attribute 'web-mode-html-tag-face nil :foreground "green" :bold t)
+  ;; (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "blue")
+  ;; (set-face-attribute 'web-mode-html-tag-bracket-face nil :foreground "blue")
 
 
   ;; auto complete and tern

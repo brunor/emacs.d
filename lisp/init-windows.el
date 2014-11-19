@@ -87,7 +87,11 @@ Selectively runs either `after-make-console-frame-hooks' or
 
 
 ;; format and show line numbers on left side of buffer
-(setq linum-format "%2d\u2502 ")
+(if window-system
+    (setq linum-format "%3d")
+  (setq linum-format "%3d "))
+;; "%3d\u2502 " for vertical line
+
 (global-linum-mode 1)
 ;; highlight current line number in left side of buffer
 (require-package 'hlinum)

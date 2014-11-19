@@ -8,6 +8,7 @@
 ;; Some basic preferences
 ;;----------------------------------------------------------------------------
 (setq-default
+ redisplay-dont-pause t
  blink-cursor-delay 0
  blink-cursor-interval 0.4
  bookmark-default-file (expand-file-name ".bookmarks.el" user-emacs-directory)
@@ -21,7 +22,7 @@
  grep-highlight-matches t
  grep-scroll-output t
  indent-tabs-mode nil
- line-spacing 0.2
+;; line-spacing 0.2
  make-backup-files nil
  mouse-yank-at-point t
  save-interprogram-paste-before-kill t
