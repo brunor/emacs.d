@@ -182,13 +182,14 @@ the cursor position happened."
 ;;-----------------------------------------------------------------------------------
 ;; add hook
 ;;-----------------------------------------------------------------------------------
-(add-hook 'haskell-mode-hook 'structured-haskell-mode)
+;;(add-hook 'haskell-mode-hook 'structured-haskell-mode)
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (add-hook 'haskell-mode-hook 'company-mode)
 (add-hook 'haskell-mode-hook 'ghc-init)
 (add-hook 'haskell-mode-hook 'turn-on-hi2)
 
-(add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
+;;(add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
 (add-hook 'haskell-mode-hook 'haskell-auto-insert-module-template)
 
 (add-hook 'inferior-haskell-mode-hook 'turn-on-ghci-completion)
